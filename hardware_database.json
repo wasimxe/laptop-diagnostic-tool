@@ -1,0 +1,363 @@
+{
+  "version": "1.0",
+  "lastUpdated": "2025-01-24",
+  "cpus": {
+    "patterns": [
+      {
+        "pattern": "i9-14|i9-13|Ryzen 9 7|Ryzen 9 8|M2 Pro|M2 Max|M3|Ultra 9",
+        "tier": "Flagship",
+        "score": 95,
+        "minScore": 90,
+        "maxScore": 100,
+        "category": "High-End Desktop/Workstation",
+        "releaseYear": 2023
+      },
+      {
+        "pattern": "i7-14|i7-13|i9-12|i9-11|Ryzen 7 7|Ryzen 7 8|Ryzen 9 5|Ryzen 9 6",
+        "tier": "High Performance",
+        "score": 85,
+        "minScore": 80,
+        "maxScore": 89,
+        "category": "Gaming/Content Creation",
+        "releaseYear": 2022
+      },
+      {
+        "pattern": "i5-14|i5-13|i5-12|i7-12|i7-11|Ryzen 5 7|Ryzen 5 6|Ryzen 7 5",
+        "tier": "Mainstream",
+        "score": 70,
+        "minScore": 65,
+        "maxScore": 79,
+        "category": "Gaming/Productivity",
+        "releaseYear": 2021
+      },
+      {
+        "pattern": "i3-12|i3-13|i5-11|i5-10|i7-10|i7-9|i7-8|Ryzen 5 5|Ryzen 5 4|Ryzen 3 7",
+        "tier": "Mid-Range",
+        "score": 55,
+        "minScore": 50,
+        "maxScore": 64,
+        "category": "Office/Light Gaming",
+        "releaseYear": 2019
+      },
+      {
+        "pattern": "i3-10|i3-11|i5-8|i5-9|i5-7|i7-7|i7-6|Ryzen 3 5|Ryzen 3 4|Ryzen 5 3",
+        "tier": "Entry Level",
+        "score": 40,
+        "minScore": 35,
+        "maxScore": 49,
+        "category": "Basic Computing",
+        "releaseYear": 2017
+      },
+      {
+        "pattern": "i3-8|i3-9|i3-7|i5-6|i5-5|i7-5|i7-4|Celeron|Pentium|Ryzen 3 3|Ryzen 3 2",
+        "tier": "Budget",
+        "score": 25,
+        "minScore": 20,
+        "maxScore": 34,
+        "category": "Light Tasks Only",
+        "releaseYear": 2015
+      },
+      {
+        "pattern": "i3-6|i3-5|i3-4|i5-4|i5-3|i7-3|i7-2|Core 2|Atom",
+        "tier": "Legacy",
+        "score": 15,
+        "minScore": 0,
+        "maxScore": 19,
+        "category": "Obsolete",
+        "releaseYear": 2013
+      }
+    ]
+  },
+  "ram": {
+    "capacity": [
+      {
+        "minGB": 32,
+        "type": "DDR5",
+        "tier": "Flagship",
+        "score": 95,
+        "category": "Workstation/High-End"
+      },
+      {
+        "minGB": 16,
+        "type": "DDR5",
+        "tier": "High Performance",
+        "score": 85,
+        "category": "Gaming/Content Creation"
+      },
+      {
+        "minGB": 32,
+        "type": "DDR4",
+        "tier": "High Performance",
+        "score": 80,
+        "category": "Content Creation"
+      },
+      {
+        "minGB": 16,
+        "type": "DDR4",
+        "tier": "Mainstream",
+        "score": 70,
+        "category": "Standard 2025"
+      },
+      {
+        "minGB": 8,
+        "type": "DDR4",
+        "tier": "Entry Level",
+        "score": 50,
+        "category": "Minimum Recommended"
+      },
+      {
+        "minGB": 8,
+        "type": "DDR3",
+        "tier": "Entry Level",
+        "score": 45,
+        "category": "Below Standard"
+      },
+      {
+        "minGB": 4,
+        "type": "DDR4",
+        "tier": "Budget",
+        "score": 30,
+        "category": "Insufficient for Modern Use"
+      },
+      {
+        "minGB": 4,
+        "type": "DDR3",
+        "tier": "Budget",
+        "score": 25,
+        "category": "Very Limited"
+      },
+      {
+        "minGB": 0,
+        "type": "any",
+        "tier": "Legacy",
+        "score": 10,
+        "category": "Obsolete"
+      }
+    ]
+  },
+  "storage": {
+    "speed": [
+      {
+        "minSpeed": 5000,
+        "type": "NVMe Gen 4+",
+        "tier": "Flagship",
+        "score": 95,
+        "category": "Professional Grade"
+      },
+      {
+        "minSpeed": 3000,
+        "type": "NVMe Gen 4",
+        "tier": "High Performance",
+        "score": 85,
+        "category": "High-Speed SSD"
+      },
+      {
+        "minSpeed": 2000,
+        "type": "NVMe Gen 3",
+        "tier": "Mainstream",
+        "score": 75,
+        "category": "Fast SSD"
+      },
+      {
+        "minSpeed": 500,
+        "type": "SATA SSD",
+        "tier": "Mid-Range",
+        "score": 60,
+        "category": "Standard SSD"
+      },
+      {
+        "minSpeed": 200,
+        "type": "SATA SSD",
+        "tier": "Entry Level",
+        "score": 50,
+        "category": "Slow SSD"
+      },
+      {
+        "minSpeed": 100,
+        "type": "HDD 7200RPM",
+        "tier": "Budget",
+        "score": 30,
+        "category": "Mechanical Drive"
+      },
+      {
+        "minSpeed": 0,
+        "type": "HDD 5400RPM",
+        "tier": "Legacy",
+        "score": 20,
+        "category": "Very Slow"
+      }
+    ],
+    "capacity": [
+      {
+        "minGB": 1000,
+        "score": 100,
+        "category": "Ample Storage"
+      },
+      {
+        "minGB": 512,
+        "score": 80,
+        "category": "Standard 2025"
+      },
+      {
+        "minGB": 256,
+        "score": 60,
+        "category": "Adequate"
+      },
+      {
+        "minGB": 128,
+        "score": 40,
+        "category": "Limited"
+      },
+      {
+        "minGB": 0,
+        "score": 20,
+        "category": "Very Limited"
+      }
+    ]
+  },
+  "gpu": {
+    "patterns": [
+      {
+        "pattern": "RTX 4090|RTX 4080|RX 7900 XTX|RX 7900 XT",
+        "tier": "Flagship",
+        "score": 95,
+        "category": "Enthusiast Gaming",
+        "releaseYear": 2023
+      },
+      {
+        "pattern": "RTX 4070|RTX 4060 Ti|RX 7800 XT|RX 7700 XT",
+        "tier": "High Performance",
+        "score": 85,
+        "category": "High-End Gaming",
+        "releaseYear": 2023
+      },
+      {
+        "pattern": "RTX 4060|RTX 3070|RTX 3060 Ti|RX 7600|RX 6700|Arc A770",
+        "tier": "Mainstream",
+        "score": 70,
+        "category": "1440p Gaming",
+        "releaseYear": 2022
+      },
+      {
+        "pattern": "RTX 3060|RTX 3050|GTX 1660|RX 6600|RX 6500|Arc A580",
+        "tier": "Mid-Range",
+        "score": 55,
+        "category": "1080p Gaming",
+        "releaseYear": 2021
+      },
+      {
+        "pattern": "GTX 1650|GTX 1050|MX570|MX550|RX 5500|Iris Xe",
+        "tier": "Entry Level",
+        "score": 40,
+        "category": "Light Gaming",
+        "releaseYear": 2020
+      },
+      {
+        "pattern": "MX450|MX350|MX250|MX150|Iris Plus|Vega",
+        "tier": "Budget",
+        "score": 30,
+        "category": "Casual Gaming",
+        "releaseYear": 2019
+      },
+      {
+        "pattern": "UHD 770|UHD 730|Iris Graphics|Intel HD",
+        "tier": "Integrated",
+        "score": 25,
+        "category": "Basic Display Only",
+        "releaseYear": 2020
+      },
+      {
+        "pattern": "UHD 620|UHD 630|HD 620|HD 520|HD 4000",
+        "tier": "Legacy Integrated",
+        "score": 15,
+        "category": "Very Basic",
+        "releaseYear": 2017
+      }
+    ]
+  },
+  "display": {
+    "resolution": [
+      {
+        "minWidth": 3840,
+        "name": "4K/UHD",
+        "score": 95,
+        "tier": "Flagship"
+      },
+      {
+        "minWidth": 2560,
+        "name": "2K/QHD",
+        "score": 80,
+        "tier": "High Performance"
+      },
+      {
+        "minWidth": 1920,
+        "name": "Full HD",
+        "score": 65,
+        "tier": "Mainstream"
+      },
+      {
+        "minWidth": 1366,
+        "name": "HD",
+        "score": 40,
+        "tier": "Entry Level"
+      },
+      {
+        "minWidth": 0,
+        "name": "Low Resolution",
+        "score": 20,
+        "tier": "Legacy"
+      }
+    ],
+    "refreshRate": [
+      {
+        "minHz": 144,
+        "score": 95,
+        "tier": "Gaming/Pro"
+      },
+      {
+        "minHz": 90,
+        "score": 80,
+        "tier": "High Refresh"
+      },
+      {
+        "minHz": 60,
+        "score": 65,
+        "tier": "Standard"
+      },
+      {
+        "minHz": 0,
+        "score": 50,
+        "tier": "Basic"
+      }
+    ]
+  },
+  "battery": {
+    "capacity": [
+      {
+        "minWh": 90,
+        "score": 95,
+        "category": "Extended Life"
+      },
+      {
+        "minWh": 70,
+        "score": 80,
+        "category": "Long Life"
+      },
+      {
+        "minWh": 50,
+        "score": 65,
+        "category": "Standard"
+      },
+      {
+        "minWh": 40,
+        "score": 50,
+        "category": "Moderate"
+      },
+      {
+        "minWh": 0,
+        "score": 30,
+        "category": "Limited"
+      }
+    ]
+  }
+}

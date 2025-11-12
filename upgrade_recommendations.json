@@ -1,0 +1,305 @@
+{
+  "version": "1.0",
+  "lastUpdated": "2025-01-24",
+  "upgrades": {
+    "ram": [
+      {
+        "from": "4GB",
+        "to": "8GB",
+        "cost": "$25-40",
+        "impact": "HIGH",
+        "performanceGain": 40,
+        "description": "Critical upgrade - 4GB is insufficient for modern Windows. Will significantly improve multitasking and prevent constant slowdowns.",
+        "difficulty": "Easy",
+        "priority": 1
+      },
+      {
+        "from": "4GB",
+        "to": "16GB",
+        "cost": "$50-80",
+        "impact": "VERY HIGH",
+        "performanceGain": 60,
+        "description": "Recommended upgrade to meet 2025 standards. Enables smooth multitasking and modern software.",
+        "difficulty": "Easy",
+        "priority": 1
+      },
+      {
+        "from": "8GB",
+        "to": "16GB",
+        "cost": "$30-50",
+        "impact": "HIGH",
+        "performanceGain": 25,
+        "description": "Strongly recommended - 16GB is the standard for 2025. Improves multitasking, gaming, and productivity software.",
+        "difficulty": "Easy",
+        "priority": 2
+      },
+      {
+        "from": "8GB",
+        "to": "32GB",
+        "cost": "$80-120",
+        "impact": "MEDIUM",
+        "performanceGain": 30,
+        "description": "Only needed for content creation, video editing, or heavy multitasking. Not necessary for general use.",
+        "difficulty": "Easy",
+        "priority": 4
+      },
+      {
+        "from": "16GB",
+        "to": "32GB",
+        "cost": "$60-100",
+        "impact": "MEDIUM",
+        "performanceGain": 15,
+        "description": "For professional content creators, video editors, or heavy multitaskers only. Most users won't benefit.",
+        "difficulty": "Easy",
+        "priority": 5
+      }
+    ],
+    "storage": [
+      {
+        "from": "HDD",
+        "to": "256GB SSD",
+        "cost": "$25-40",
+        "impact": "VERY HIGH",
+        "performanceGain": 200,
+        "description": "Most impactful upgrade possible! Boot time drops from minutes to seconds. System feels brand new.",
+        "difficulty": "Moderate",
+        "priority": 1
+      },
+      {
+        "from": "HDD",
+        "to": "512GB SSD",
+        "cost": "$35-60",
+        "impact": "VERY HIGH",
+        "performanceGain": 200,
+        "description": "Critical upgrade with adequate storage space. Transforms system performance completely.",
+        "difficulty": "Moderate",
+        "priority": 1
+      },
+      {
+        "from": "SATA SSD",
+        "to": "NVMe SSD",
+        "cost": "$40-80",
+        "impact": "MEDIUM",
+        "performanceGain": 30,
+        "description": "Noticeable improvement for large file transfers and professional work. Not essential for general use.",
+        "difficulty": "Moderate",
+        "priority": 4
+      },
+      {
+        "from": "128GB",
+        "to": "512GB",
+        "cost": "$35-60",
+        "impact": "MEDIUM",
+        "performanceGain": 10,
+        "description": "More storage space reduces the need to constantly manage files and allows more applications.",
+        "difficulty": "Moderate",
+        "priority": 3
+      },
+      {
+        "from": "256GB",
+        "to": "512GB",
+        "cost": "$30-50",
+        "impact": "LOW",
+        "performanceGain": 5,
+        "description": "Additional storage space. Only upgrade if frequently running out of space.",
+        "difficulty": "Moderate",
+        "priority": 5
+      }
+    ],
+    "battery": [
+      {
+        "condition": "Below 50%",
+        "cost": "$40-120",
+        "impact": "HIGH",
+        "performanceGain": 100,
+        "description": "Battery health below 50% means very poor runtime. Replacement restores original battery life.",
+        "difficulty": "Moderate to Difficult",
+        "priority": 2,
+        "notes": "Price varies by model. Some laptops require professional service. Check warranty status first."
+      },
+      {
+        "condition": "50-70%",
+        "cost": "$40-120",
+        "impact": "MEDIUM",
+        "performanceGain": 40,
+        "description": "Battery degraded but still functional. Consider replacement if portability is important.",
+        "difficulty": "Moderate to Difficult",
+        "priority": 3,
+        "notes": "Evaluate based on usage patterns. Desktop replacement users may not need this."
+      }
+    ],
+    "laptop_replacement": {
+      "triggers": [
+        {
+          "condition": "CPU older than 7 years",
+          "reason": "CPU is outdated and cannot be upgraded. Performance gap is too large to overcome with other upgrades."
+        },
+        {
+          "condition": "Performance score below 40",
+          "reason": "Multiple components are outdated. Upgrades would cost more than the laptop's value."
+        },
+        {
+          "condition": "DDR3 RAM with old CPU",
+          "reason": "Platform is obsolete. Modern software requires newer architecture."
+        },
+        {
+          "condition": "No SSD support or limited upgrade options",
+          "reason": "Hardware limitations prevent meaningful upgrades."
+        }
+      ],
+      "budgets": [
+        {
+          "range": "$400-600",
+          "expectedPerformance": 60,
+          "category": "Entry Level",
+          "description": "Budget laptops with modern CPUs (i3/Ryzen 3), 8GB RAM, 256GB SSD. Suitable for basic tasks, web browsing, office work.",
+          "examples": "Lenovo IdeaPad, HP 15s, Acer Aspire"
+        },
+        {
+          "range": "$600-900",
+          "expectedPerformance": 75,
+          "category": "Mainstream",
+          "description": "Mid-range laptops with i5/Ryzen 5, 16GB RAM, 512GB SSD. Good for productivity, light gaming, multitasking.",
+          "examples": "Lenovo ThinkPad E series, Dell Inspiron, HP Pavilion"
+        },
+        {
+          "range": "$900-1500",
+          "expectedPerformance": 85,
+          "category": "High Performance",
+          "description": "Premium laptops with i7/Ryzen 7, 16GB+ RAM, 512GB+ NVMe, dedicated GPU. Excellent for gaming, content creation, professional work.",
+          "examples": "Dell XPS, ASUS ZenBook, Lenovo Legion, HP Omen"
+        },
+        {
+          "range": "$1500+",
+          "expectedPerformance": 95,
+          "category": "Flagship",
+          "description": "Top-tier laptops with latest CPUs, 32GB+ RAM, 1TB+ NVMe, high-end GPUs. For professionals, gamers, content creators.",
+          "examples": "MacBook Pro, Dell XPS 17, ASUS ROG, Razer Blade"
+        }
+      ]
+    }
+  },
+  "useCases": {
+    "performance_ranges": [
+      {
+        "minScore": 85,
+        "maxScore": 100,
+        "tier": "Flagship",
+        "suitable": [
+          "Professional 3D rendering and CAD",
+          "4K/8K video editing",
+          "Modern AAA gaming at high settings",
+          "Machine learning and AI development",
+          "Virtual reality",
+          "Heavy multitasking with professional apps",
+          "Software development with multiple VMs",
+          "Live streaming while gaming"
+        ],
+        "limited": [],
+        "notRecommended": []
+      },
+      {
+        "minScore": 70,
+        "maxScore": 84,
+        "tier": "High Performance",
+        "suitable": [
+          "1080p/1440p gaming at medium-high settings",
+          "1080p video editing",
+          "Photo editing and graphic design",
+          "Programming and development",
+          "Music production",
+          "Moderate multitasking",
+          "Content creation",
+          "CAD (light to moderate)"
+        ],
+        "limited": [
+          "4K video editing (slow)",
+          "Modern AAA games at maximum settings",
+          "Heavy 3D rendering"
+        ],
+        "notRecommended": [
+          "8K video editing",
+          "Professional 3D animation"
+        ]
+      },
+      {
+        "minScore": 50,
+        "maxScore": 69,
+        "tier": "Mainstream",
+        "suitable": [
+          "Web browsing and email",
+          "Microsoft Office suite",
+          "1080p video streaming",
+          "Light photo editing",
+          "Programming (lightweight IDEs)",
+          "Online meetings (Zoom, Teams)",
+          "Document processing",
+          "Casual/older games"
+        ],
+        "limited": [
+          "Modern gaming (low settings only)",
+          "Video editing (basic, 1080p)",
+          "Heavy multitasking (slow)",
+          "Large Excel spreadsheets"
+        ],
+        "notRecommended": [
+          "AAA gaming",
+          "Professional video editing",
+          "3D rendering",
+          "Running multiple VMs"
+        ]
+      },
+      {
+        "minScore": 35,
+        "maxScore": 49,
+        "tier": "Entry Level",
+        "suitable": [
+          "Basic web browsing",
+          "Email",
+          "Simple document editing",
+          "Video streaming (720p-1080p)",
+          "Light spreadsheets",
+          "Social media"
+        ],
+        "limited": [
+          "Microsoft Office (slow with large files)",
+          "Multitasking (3-4 apps max)",
+          "Photo viewing and organization",
+          "Video calls (may lag)"
+        ],
+        "notRecommended": [
+          "Gaming (any modern games)",
+          "Video editing",
+          "Photo editing",
+          "Programming",
+          "Heavy multitasking",
+          "Professional software"
+        ]
+      },
+      {
+        "minScore": 0,
+        "maxScore": 34,
+        "tier": "Legacy",
+        "suitable": [
+          "Very light web browsing",
+          "Email (basic clients)",
+          "Text documents only"
+        ],
+        "limited": [
+          "Modern websites (slow)",
+          "Video streaming (may buffer)",
+          "Any modern software"
+        ],
+        "notRecommended": [
+          "Windows 11",
+          "Modern web browsers (Chrome)",
+          "Video calls",
+          "Multitasking",
+          "Any gaming",
+          "Photo/video editing",
+          "Professional work"
+        ]
+      }
+    ]
+  }
+}

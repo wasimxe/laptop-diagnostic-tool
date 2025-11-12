@@ -1,0 +1,36 @@
+# Windows specific
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# PowerShell
+*.ps1~
+*.psm1~
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
+
+# Generated reports (optional - comment out if you want to commit sample reports)
+# reports/*.html
+
+# IDE and Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# System files
+.DS_Store
+
+# Backup files
+*.bak
+*.backup
+*_backup.*
+
+# Test files
+test_*.ps1
+debug_*.ps1

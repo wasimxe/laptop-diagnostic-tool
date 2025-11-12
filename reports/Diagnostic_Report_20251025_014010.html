@@ -1,0 +1,1623 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laptop Diagnostic Report - v15.0</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .dual-rating {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            padding: 40px;
+            background: #f8f9fa;
+        }
+
+        .rating-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .rating-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .rating-card h2 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+
+        .rating-card .subtitle {
+            font-size: 14px;
+            color: #7f8c8d;
+            margin-bottom: 20px;
+        }
+
+        .score-display {
+            font-size: 64px;
+            font-weight: bold;
+            margin: 20px 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .rating-label {
+            font-size: 24px;
+            font-weight: 600;
+            color: #34495e;
+            margin-bottom: 15px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #ecf0f1;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 1s ease;
+        }
+
+        .component-breakdown {
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 10px;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        .component-name {
+            color: #34495e;
+            font-weight: 500;
+        }
+
+        .component-bar {
+            height: 8px;
+            background: #ecf0f1;
+            border-radius: 4px;
+            align-self: center;
+        }
+
+        .component-bar-fill {
+            height: 100%;
+            background: #667eea;
+            border-radius: 4px;
+        }
+
+        .component-score {
+            color: #7f8c8d;
+            font-weight: 600;
+        }
+
+        .tabs {
+            display: flex;
+            background: #34495e;
+            overflow-x: auto;
+        }
+
+        .tab-button {
+            background: none;
+            border: none;
+            color: white;
+            padding: 15px 30px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+            white-space: nowrap;
+        }
+
+        .tab-button:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .tab-button.active {
+            background: rgba(255,255,255,0.15);
+            border-bottom-color: #667eea;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 30px;
+            animation: fadeIn 0.3s;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .card h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .card-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        .card-row:last-child {
+            border-bottom: none;
+        }
+
+        .label {
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+
+        .value {
+            color: #2c3e50;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-excellent { background: #d4edda; color: #155724; }
+        .status-good { background: #cce5ff; color: #004085; }
+        .status-fair { background: #fff3cd; color: #856404; }
+        .status-poor { background: #f8d7da; color: #721c24; }
+
+        .test-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .test-section h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .use-case-section {
+            margin: 20px 0;
+        }
+
+        .use-case-section h3 {
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        .use-case-section ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .use-case-section li {
+            padding: 8px 0 8px 25px;
+            position: relative;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .suitable li:before { content: '+'; position: absolute; left: 0; color: #27ae60; font-weight: bold; }
+        .limited li:before { content: '!'; position: absolute; left: 0; color: #f39c12; font-weight: bold; }
+        .not-recommended li:before { content: '-'; position: absolute; left: 0; color: #e74c3c; font-weight: bold; }
+
+        .upgrade-card {
+            background: white;
+            border: 2px solid #ecf0f1;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .upgrade-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .upgrade-header h3 {
+            color: #2c3e50;
+            font-size: 18px;
+        }
+
+        .priority-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .upgrade-details {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .upgrade-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+        }
+
+        .upgrade-label {
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+
+        .upgrade-value {
+            color: #2c3e50;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .upgrade-description {
+            color: #34495e;
+            font-size: 14px;
+            line-height: 1.6;
+            font-style: italic;
+        }
+
+        @media print {
+            .tabs, .tab-button {
+                display: none;
+            }
+            .tab-content {
+                display: block !important;
+                page-break-inside: avoid;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .dual-rating {
+                grid-template-columns: 1fr;
+            }
+
+            .cards {
+                grid-template-columns: 1fr;
+            }
+
+            .tabs {
+                flex-wrap: wrap;
+            }
+        }
+
+        /* Interactive test styles */
+        .keyboard-grid {
+            margin: 20px 0;
+        }
+
+        .keyboard-row {
+            margin-bottom: 15px;
+            border-left: 3px solid #667eea;
+            padding-left: 15px;
+        }
+
+        .row-label {
+            font-size: 11px;
+            color: #7f8c8d;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .keys-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .key {
+            background: #ecf0f1;
+            border: 2px solid #bdc3c7;
+            border-radius: 5px;
+            padding: 12px 8px;
+            text-align: center;
+            font-size: 11px;
+            font-weight: 600;
+            color: #2c3e50;
+            min-width: 45px;
+            min-height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .key.pressed {
+            background: #27ae60;
+            color: white;
+            border-color: #229954;
+            transform: scale(0.95);
+        }
+
+        .touchpad-test {
+            background: white;
+            border: 2px solid #34495e;
+            border-radius: 10px;
+            height: 400px;
+            cursor: crosshair;
+            position: relative;
+        }
+
+        .test-button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            margin: 5px;
+            transition: all 0.3s;
+        }
+
+        .test-button:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+        }
+
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .status-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .status-item .label {
+            font-size: 12px;
+            color: #7f8c8d;
+            margin-bottom: 5px;
+        }
+
+        .status-item .value {
+            font-size: 16px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Laptop Diagnostic Report v15.0</h1>
+            <p>Complete System Analysis - Generated: 20251025_014010</p>
+            <p>System: Dell Inc. Precision M2800</p>
+        </div>
+
+        <div class="dual-rating">
+            <div class="rating-card">
+                <h2>Health Score</h2>
+                <p class="subtitle">Current condition and functionality</p>
+                <div class="score-display">60/100</div>
+                <div class="rating-label">Fair</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 60%;"></div>
+                </div>
+                <div class="component-breakdown">
+                    <span class="component-name">CPU</span>
+                    <div class="component-bar"><div class="component-bar-fill" style="width: 70%;"></div></div>
+                    <span class="component-score">7/10</span>
+
+                    <span class="component-name">RAM</span>
+                    <div class="component-bar"><div class="component-bar-fill" style="width: 70%;"></div></div>
+                    <span class="component-score">7/10</span>
+
+                    <span class="component-name">Storage</span>
+                    <div class="component-bar"><div class="component-bar-fill" style="width: 80%;"></div></div>
+                    <span class="component-score">8/10</span>
+
+                    <span class="component-name">Battery</span>
+                    <div class="component-bar"><div class="component-bar-fill" style="width: 20%;"></div></div>
+                    <span class="component-score">2/10</span>
+                </div>
+            </div>
+
+            <div class="rating-card">
+                <h2>Performance Score</h2>
+                <p class="subtitle">Compared to 2025 standards</p>
+                <div class="score-display">43/100</div>
+                <div class="rating-label">Mid-Range</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 43%;"></div>
+                </div>
+                <div class="component-breakdown">
+                    <span class="component-name">CPU (Budget)</span>
+                    <div class="component-bar"><div class="component-bar-fill" style="width: 25%;"></div></div>
+                    <span class="component-score">25/100</span>
+
+                    <span class="component-name">RAM (Entry Level)</span>
+                    <div class="component-bar"><div class="component-bar-fill" style="width: 45%;"></div></div>
+                    <span class="component-score">45/100</span>
+
+                    <span class="component-name">Storage (Mid-Range)</span>
+                    <div class="component-bar"><div class="component-bar-fill" style="width: 60%;"></div></div>
+                    <span class="component-score">60/100</span>
+
+                    <span class="component-name">GPU (Unknown)</span>
+                    <div class="component-bar"><div class="component-bar-fill" style="width: 50%;"></div></div>
+                    <span class="component-score">50/100</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-button active" onclick="openTab('overview', event)">Overview</button>
+            <button class="tab-button" onclick="openTab('battery', event)">Battery</button>
+            <button class="tab-button" onclick="openTab('temperature', event)">Temperature</button>
+            <button class="tab-button" onclick="openTab('adapter', event)">Adapter Test</button>
+            <button class="tab-button" onclick="openTab('hardware', event)">Hardware Details</button>
+            <button class="tab-button" onclick="openTab('keyboard', event)">Keyboard Test</button>
+            <button class="tab-button" onclick="openTab('touchpad', event)">Touchpad Test</button>
+            <button class="tab-button" onclick="openTab('display', event)">Display Test</button>
+            <button class="tab-button" onclick="openTab('audio', event)">Audio Test</button>
+        </div>
+
+        <div id="overview" class="tab-content active">
+            <h2 style="margin-bottom: 20px;">System Overview</h2>
+
+            <div class="cards">
+                <div class="card">
+                    <h3>System Information</h3>
+                    <div class="card-row">
+                        <span class="label">Manufacturer</span>
+                        <span class="value">Dell Inc.</span>
+                    </div>
+                    <div class="card-row">
+                        <span class="label">Model</span>
+                        <span class="value">Precision M2800</span>
+                    </div>
+                    <div class="card-row">
+                        <span class="label">Operating System</span>
+                        <span class="value">Microsoft Windows 11 Pro</span>
+                    </div>
+                    <div class="card-row">
+                        <span class="label">BIOS Version</span>
+                        <span class="value">A05</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Processor</h3>
+                    <div class="card-row">
+                        <span class="label">Model</span>
+                        <span class="value">Intel(R) Core(TM) i7-4710MQ CPU @ 2.50GHz</span>
+                    </div>
+                    <div class="card-row">
+                        <span class="label">Cores / Threads</span>
+                        <span class="value">4 / 4</span>
+                    </div>
+                    <div class="card-row">
+                        <span class="label">Speed</span>
+                        <span class="value">2501 MHz</span>
+                    </div>
+                    <div class="card-row">
+                        <span class="label">Current Load</span>
+                        <span class="value">2.7%</span>
+                    </div>
+                    <div class="card-row">
+                        <span class="label">Benchmark</span>
+                        <span class="value">33386 ops/sec</span>
+                    </div>
+                    <div class="card-row">
+                        <span class="label">Tier</span>
+                        <span class="value">Budget (25/100)</span>
+                    </div>
+                    <div class="card-row">
+                        <span class="label">Age</span>
+                        <span class="value">~10 years old</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Memory (RAM)</h3>
+                    <div class="card-row">
+                        <span class="label">Total RAM</span>
+                        <span class="value">8 GB</span>
+                    </div>
+                    <div class="card-row">
+                        <span class="label">Type</span>
+                        <span class="value">DDR3</span>
+                    </div>
+                    <div class="card-row">
+                        <span class="label">Speed</span>
+                        <span class="value">1600 MHz</span>
+                    </div>
+                    <div class="card-row">
+                        <span class="label">Modules</span>
+                        <span class="value">2</span>
+                    </div>
+                    <div class="card-row">
+                        <span class="label">Tier</span>
+                        <span class="value">Entry Level (45/100)</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Storage</h3>
+                    <div class="card-row">
+                        <span class="label">Model</span>
+                        <span class="value">Rmdisk mSATA SSD 256GB</span>
+                    </div>
+                    <div class="card-row">
+                        <span class="label">Size</span>
+                        <span class="value">238.47 GB</span>
+                    </div>
+                    <div class="card-row">
+                        <span class="label">Type</span>
+                        <span class="value">SSD</span>
+                    </div>
+                    <div class="card-row">
+                        <span class="label">Health</span>
+                        <span class="value">Healthy</span>
+                    </div>
+                    <div class="card-row">
+                        <span class="label">Read Speed</span>
+                        <span class="value">909.09 MB/s</span>
+                    </div>
+                    <div class="card-row">
+                        <span class="label">Write Speed</span>
+                        <span class="value">1428.57 MB/s</span>
+                    </div>
+                    <div class="card-row">
+                        <span class="label">Tier</span>
+                        <span class="value">Mid-Range (60/100)</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Graphics</h3>
+                    <div class="card-row">
+                        <span class="label">GPU</span>
+                        <span class="value">Intel(R) HD Graphics 4600</span>
+                    </div>
+                    <div class="card-row">
+                        <span class="label">Type</span>
+                        <span class="value">Integrated</span>
+                    </div>
+                    <div class="card-row">
+                        <span class="label">VRAM</span>
+                        <span class="value">1 GB</span>
+                    </div>
+                    <div class="card-row">
+                        <span class="label">Driver</span>
+                        <span class="value">20.19.15.4835</span>
+                    </div>
+                    <div class="card-row">
+                        <span class="label">Tier</span>
+                        <span class="value">Unknown (50/100)</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Display</h3>
+                    <div class="card-row">
+                        <span class="label">Resolution</span>
+                        <span class="value">1366x768</span>
+                    </div>
+                    <div class="card-row">
+                        <span class="label">Refresh Rate</span>
+                        <span class="value">60 Hz</span>
+                    </div>
+                    <div class="card-row">
+                        <span class="label">Screen Size</span>
+                        <span class="value" style="color: #27ae60; font-weight: bold;">15.3 inches</span>
+                    </div>
+                    <div class="card-row">
+                        <span class="label">Touchscreen</span>
+                        <span class="value">No</span>
+                    </div>
+                    <div class="card-row">
+                        <span class="label">Tier</span>
+                        <span class="value">Entry Level (48/100)</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Network & Connectivity</h3>
+                    <div class="card-row">
+                        <span class="label">WiFi</span>
+                        <span class="value" style="color: #27ae60;">Detected</span>
+                    </div>                    <div class="card-row">
+                        <span class="label">WiFi Adapter</span>
+                        <span class="value">Intel(R) Centrino(R) Advanced-N 6235</span>
+                    </div>
+                    <div class="card-row">
+                        <span class="label">Link Speed</span>
+                        <span class="value">72 Mbps</span>
+                    </div>
+                    <div class="card-row">
+                        <span class="label">Status</span>
+                        <span class="value">Up</span>
+                    </div>                    <div class="card-row">
+                        <span class="label">Signal Strength</span>
+                        <span class="value">%</span>
+                    </div>                    <div class="card-row">
+                        <span class="label">Bluetooth</span>
+                        <span class="value">Not Found</span>
+                    </div>
+                    <div class="card-row">
+                        <span class="label">Ethernet</span>
+                        <span class="value">Yes</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Ports & Connectors</h3>
+                    <div class="card-row">
+                        <span class="label">Total USB Ports</span>
+                        <span class="value">5</span>
+                    </div>
+                    <div class="card-row">
+                        <span class="label">USB Type-A</span>
+                        <span class="value">5</span>
+                    </div>
+                    <div class="card-row">
+                        <span class="label">USB Type-C</span>
+                        <span class="value" style="color: #e74c3c;">0</span>
+                    </div>
+                    <div class="card-row">
+                        <span class="label">USB-C PD</span>
+                        <span class="value">No</span>
+                    </div>
+                    <div class="card-row">
+                        <span class="label">HDMI</span>
+                        <span class="value">Yes</span>
+                    </div>
+                    <div class="card-row">
+                        <span class="label">VGA</span>
+                        <span class="value">Yes</span>
+                    </div>
+                    <div class="card-row">
+                        <span class="label">Ethernet Port</span>
+                        <span class="value">Yes</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Keyboard & Input</h3>
+                    <div class="card-row">
+                        <span class="label">Keyboard Backlight</span>
+                        <span class="value" style="color: #7f8c8d;">Not Detected</span>
+                    </div>
+                    <div class="card-row">
+                        <span class="label">Layout</span>
+                        <span class="value">Standard</span>
+                    </div>
+                    <div class="card-row">
+                        <span class="label">Keyboards</span>
+                        <span class="value"></span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Webcam</h3>
+                    <div class="card-row">
+                        <span class="label">Status</span>
+                        <span class="value" style="color: #e74c3c;">Not Found</span>
+                    </div>
+                    <div class="card-row">
+                        <span class="label">Count</span>
+                        <span class="value"></span>
+                    </div>                </div>
+
+                <div class="card">
+                    <h3>Durability & Certifications</h3>
+                    <div class="card-row">
+                        <span class="label">MIL-STD Certified</span>
+                        <span class="value" style="color: #7f8c8d;">No/Unknown</span>
+                    </div>                    <div class="card-row">
+                        <span class="label">Est. Lifespan</span>
+                        <span class="value">3-4 years</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Special Features</h3>
+                    <div class="card-row">
+                        <span class="label">USB Power When Off</span>
+                        <span class="value">Unknown</span>
+                    </div>
+                    <div class="card-row">
+                        <span class="label">USB-C PD Charging</span>
+                        <span class="value">No</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="test-section">
+                <h3>Recommended Use Cases</h3>
+                <p style="margin-bottom: 20px; color: #7f8c8d;">Based on your Performance Score of <strong>43/100 (Mid-Range)</strong>, here's what your laptop can handle:</p>
+
+                <div class='use-case-section'><h3 style='color: #27ae60;'>+ Well Suited For:</h3><ul class='suitable'><li>Basic web browsing</li><li>Email</li><li>Simple document editing</li><li>Video streaming (720p-1080p)</li><li>Light spreadsheets</li><li>Social media</li></ul></div><div class='use-case-section'><h3 style='color: #f39c12;'>! Limited Performance For:</h3><ul class='limited'><li>Microsoft Office (slow with large files)</li><li>Multitasking (3-4 apps max)</li><li>Photo viewing and organization</li><li>Video calls (may lag)</li></ul></div><div class='use-case-section'><h3 style='color: #e74c3c;'>- Not Recommended For:</h3><ul class='not-recommended'><li>Gaming (any modern games)</li><li>Video editing</li><li>Photo editing</li><li>Programming</li><li>Heavy multitasking</li><li>Professional software</li></ul></div>
+            </div>
+
+            <div class="test-section">
+                <h3>Upgrade Recommendations</h3>
+                <p style="margin-bottom: 20px; color: #7f8c8d;">These upgrades could improve your system's performance:</p>
+
+                <div class='upgrade-card'>
+    <div class='upgrade-header'>
+        <h3>Full Laptop</h3>
+        <span class='priority-badge' style='background: #e74c3c;'>Priority: HIGH</span>
+    </div>
+    <div class='upgrade-details'>
+        <div class='upgrade-row'>
+            <span class='upgrade-label'>Current:</span>
+            <span class='upgrade-value'>Current System</span>
+        </div>
+        <div class='upgrade-row'>
+            <span class='upgrade-label'>Recommended:</span>
+            <span class='upgrade-value' style='color: #27ae60; font-weight: 600;'>New Laptop</span>
+        </div>
+        <div class='upgrade-row'>
+            <span class='upgrade-label'>Cost:</span>
+            <span class='upgrade-value'>-900</span>
+        </div>
+        <div class='upgrade-row'>
+            <span class='upgrade-label'>Performance Gain:</span>
+            <span class='upgrade-value' style='color: #3498db; font-weight: 600;'>+150%</span>
+        </div>
+    </div>
+    <p class='upgrade-description'>System is significantly outdated. New mid-range laptop would provide substantially better performance.</p>
+</div><div class='upgrade-card'>
+    <div class='upgrade-header'>
+        <h3>RAM</h3>
+        <span class='priority-badge' style='background: #f39c12;'>Priority: MEDIUM</span>
+    </div>
+    <div class='upgrade-details'>
+        <div class='upgrade-row'>
+            <span class='upgrade-label'>Current:</span>
+            <span class='upgrade-value'>8GB</span>
+        </div>
+        <div class='upgrade-row'>
+            <span class='upgrade-label'>Recommended:</span>
+            <span class='upgrade-value' style='color: #27ae60; font-weight: 600;'>16GB</span>
+        </div>
+        <div class='upgrade-row'>
+            <span class='upgrade-label'>Cost:</span>
+            <span class='upgrade-value'>-50</span>
+        </div>
+        <div class='upgrade-row'>
+            <span class='upgrade-label'>Performance Gain:</span>
+            <span class='upgrade-value' style='color: #3498db; font-weight: 600;'>+25%</span>
+        </div>
+    </div>
+    <p class='upgrade-description'>Strongly recommended - 16GB is the standard for 2025.</p>
+</div>
+            </div>
+        </div>
+
+        <div id="battery" class="tab-content">
+            <h2 style="margin-bottom: 20px;">Battery Analysis</h2>
+            <div class="test-section">
+                <h3>Battery Health: <span style="color: #e74c3c;">0%</span></h3>
+                <div class="progress-bar" style="margin: 20px 0;">
+                    <div class="progress-fill" style="width: 0%; background: #e74c3c;"></div>
+                </div>
+
+                <div class="cards">
+                    <div class="card">
+                        <h3>Capacity Information</h3>
+                        <div class="card-row">
+                            <span class="label">Design Capacity</span>
+                            <span class="value">0 mWh</span>
+                        </div>
+                        <div class="card-row">
+                            <span class="label">Full Charge Capacity</span>
+                            <span class="value">27617 mWh</span>
+                        </div>
+                        <div class="card-row">
+                            <span class="label">Current Charge</span>
+                            <span class="value">241%</span>
+                        </div>
+                        <div class="card-row">
+                            <span class="label">Health Percentage</span>
+                            <span class="value" style="color: #e74c3c; font-weight: bold;">0%</span>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>Battery Details</h3>
+                        <div class="card-row">
+                            <span class="label">Status</span>
+                            <span class="value">On AC Power</span>
+                        </div>
+                        <div class="card-row">
+                            <span class="label">Chemistry</span>
+                            <span class="value">Lithium Ion</span>
+                        </div>
+                        <div class="card-row">
+                            <span class="label">Voltage</span>
+                            <span class="value">N/A</span>
+                        </div>
+                        <div class="card-row">
+                            <span class="label">Current Rate</span>
+                            <span class="value">N/A</span>
+                        </div>
+                        <div class="card-row">
+                            <span class="label">Cycle Count</span>
+                            <span class="value">N/A</span>
+                        </div>
+                        <div class="card-row">
+                            <span class="label">Manufacturer</span>
+                            <span class="value">N/A</span>
+                        </div>
+                    </div>
+                </div>
+            </div>        </div>
+
+        <div id="temperature" class="tab-content">
+            <h2 style="margin-bottom: 20px;">Temperature & Cooling</h2>
+
+            <div class="test-section">
+                <h3>CPU Temperature</h3>                <p>Temperature sensor not available on this system.</p>            </div>
+        </div>
+
+        <div id="adapter" class="tab-content">
+            <h2 style="margin-bottom: 20px;">AC Adapter / Charger Health Test</h2>
+
+            <div class="test-section">                <div class="card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; margin-bottom: 20px;">
+                    <h3 style="color: white;">Overall Adapter Health</h3>
+                    <div style="text-align: center; padding: 20px 0;">
+                        <div style="font-size: 48px; font-weight: bold;">Fair</div>
+                        <div style="font-size: 16px; margin-top: 10px; opacity: 0.9;">10-second comprehensive test completed</div>
+                    </div>
+                </div>
+
+                <h3>Power Delivery Analysis</h3>
+                <div class="cards">
+                    <div class="card">
+                        <h3>Battery Voltage</h3>
+                        <div class="card-row">
+                            <span class="label">Current</span>
+                            <span class="value">12.92 V</span>
+                        </div>
+                        <div class="card-row">
+                            <span class="label">Average</span>
+                            <span class="value">12.92 V</span>
+                        </div>
+                        <div class="card-row">
+                            <span class="label">Min / Max</span>
+                            <span class="value">12.92 - 12.92 V</span>
+                        </div>
+                        <div class="card-row">
+                            <span class="label">Stability</span>
+                            <span class="value" style="color: #f39c12; font-weight: bold;">Excellent</span>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>Charging Power</h3>
+                        <div class="card-row">
+                            <span class="label">Current</span>
+                            <span class="value">0 W</span>
+                        </div>
+                        <div class="card-row">
+                            <span class="label">Average</span>
+                            <span class="value">0 W</span>
+                        </div>
+                        <div class="card-row">
+                            <span class="label">Min / Max</span>
+                            <span class="value">0 - 0 W</span>
+                        </div>
+                        <div class="card-row">
+                            <span class="label">Estimated Rating</span>
+                            <span class="value" style="font-weight: bold;">Unknown</span>
+                        </div>
+                    </div>                </div>
+
+                <h3>Charging Performance</h3>
+                <div class="cards">                    <div class="card">
+                        <h3>Charging Status</h3>
+                        <div class="card-row">
+                            <span class="label">Status</span>
+                            <span class="value" style="color: #e74c3c; font-weight: bold;">[X] Not Charging</span>
+                        </div>
+                        <div class="card-row">
+                            <span class="label">Battery Level</span>
+                            <span class="value">0%</span>
+                        </div>
+                        <div style="margin-top: 10px; padding: 10px; background: #fee; border-radius: 5px; border-left: 3px solid #e74c3c;">
+                            <p style="font-size: 13px; color: #c0392b; margin: 0;">Adapter is connected but battery is not charging at 0%. This could indicate an issue with the adapter, cable, or charging port.</p>
+                        </div>
+                    </div>                    <div class="card">
+                        <h3>Battery Level Change</h3>
+                        <div class="card-row">
+                            <span class="label">Start Level</span>
+                            <span class="value">0%</span>
+                        </div>
+                        <div class="card-row">
+                            <span class="label">End Level</span>
+                            <span class="value">0%</span>
+                        </div>
+                        <div class="card-row">
+                            <span class="label">Delta (10s)</span>
+                            <span class="value">0%</span>
+                        </div>
+                    </div>
+                </div>                <h3>Issues Detected</h3>
+                <div style="background: #fee; border-left: 3px solid #e74c3c; padding: 15px; border-radius: 5px; margin-bottom: 20px;">                    <div style="margin-bottom: 8px; color: #c0392b;">
+                        <span style="font-weight: bold;">[!]</span> Adapter connected but battery not charging (Battery at 0 percent)
+                    </div>                </div>                <h3>Recommendations</h3>
+                <div style="background: #e8f5e9; border-left: 3px solid #27ae60; padding: 15px; border-radius: 5px;">                    <div style="margin-bottom: 8px; color: #27ae60;">
+                        <span style="font-weight: bold;">[OK]</span> Check adapter cable and port for damage
+                    </div>                    <div style="margin-bottom: 8px; color: #27ae60;">
+                        <span style="font-weight: bold;">[OK]</span> Try a different power outlet
+                    </div>                </div>                <h3>Important Notes</h3>
+                <div style="background: #e7f3ff; border-left: 3px solid #2196f3; padding: 15px; border-radius: 5px; margin-bottom: 20px;">                    <div style="margin-bottom: 8px; color: #1565c0; font-size: 13px;">
+                        <span style="font-weight: bold;">*</span> Battery Voltage: 12.92V (voltage measured at battery terminals)
+                    </div>                    <div style="margin-bottom: 8px; color: #1565c0; font-size: 13px;">
+                        <span style="font-weight: bold;">*</span> Typical laptop adapter output: 19-20V DC (cannot be directly measured from system)
+                    </div>                </div>                <div style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 5px;">
+                    <h4 style="font-size: 14px; color: #2c3e50; margin-bottom: 10px;">Understanding Adapter Health:</h4>
+                    <ul style="font-size: 13px; color: #34495e; line-height: 1.6; margin: 0; padding-left: 20px;">
+                        <li><strong>Voltage Stability:</strong> Good adapters maintain stable voltage within 3-5% variance</li>
+                        <li><strong>Power Output:</strong> Should match or exceed the adapter's rated wattage during charging</li>
+                        <li><strong>Charging Rate:</strong> Healthy adapters charge at consistent rates without significant drops</li>
+                        <li><strong>Typical Ratings:</strong> Laptops use 45W (ultrabooks), 65W (standard), 90W+ (gaming/workstations)</li>
+                    </ul>
+                </div>            </div>
+        </div>
+
+        <div id="hardware" class="tab-content">
+            <h2 style="margin-bottom: 20px;">Detailed Hardware Information</h2>
+
+            <div class="cards">
+                <div class="card">
+                    <h3>CPU Cache</h3>
+                    <div class="card-row">
+                        <span class="label">L2 Cache</span>
+                        <span class="value">1 MB</span>
+                    </div>
+                    <div class="card-row">
+                        <span class="label">L3 Cache</span>
+                        <span class="value">6 MB</span>
+                    </div>
+                    <div class="card-row">
+                        <span class="label">Virtualization</span>
+                        <span class="value">Disabled</span>
+                    </div>
+                    <div class="card-row">
+                        <span class="label">Socket</span>
+                        <span class="value">SOCKET 0</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Audio Devices</h3>                    <div class="card-row">
+                        <span class="label">High Definition Audio Device</span>
+                        <span class="value">OK</span>
+                    </div>                    <div class="card-row">
+                        <span class="label">High Definition Audio Device</span>
+                        <span class="value">OK</span>
+                    </div>                </div>
+
+                <div class="card">
+                    <h3>Input Devices</h3>
+                    <div class="card-row">
+                        <span class="label">Keyboards</span>
+                        <span class="value"></span>
+                    </div>
+                    <div class="card-row">
+                        <span class="label">Pointing Devices</span>
+                        <span class="value">2</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Network Adapters</h3>                    <div class="card-row">
+                        <span class="label">WiFi</span>
+                        <span class="value">72 Mbps</span>
+                    </div>                </div>
+            </div>
+        </div>
+
+        <div id="keyboard" class="tab-content">
+            <h2 style="margin-bottom: 20px;">Keyboard Test</h2>
+
+            <div class="test-section">
+                <h3>Press any key to test</h3>
+                <p style="margin-bottom: 20px; color: #7f8c8d;">Keys will turn green when pressed. Test all keys to ensure they work correctly.</p>
+
+                <div id="keyboard-display" class="keyboard-grid">
+                    <!-- Keys will be dynamically added here -->
+                </div>
+
+                <button class="test-button" onclick="resetKeyboard()">Reset Test</button>
+            </div>
+        </div>
+
+        <div id="touchpad" class="tab-content">
+            <h2 style="margin-bottom: 20px;">Touchpad/Mouse Test</h2>
+
+            <div class="test-section">
+                <h3>Draw on the canvas to test</h3>
+                <p style="margin-bottom: 20px; color: #7f8c8d;">Click, drag, and test all mouse buttons and touchpad gestures.</p>
+
+                <div class="status-grid">
+                    <div class="status-item">
+                        <div class="label">Left Click</div>
+                        <div class="value" id="leftClickStatus" style="color: #e74c3c;">Not Tested</div>
+                    </div>
+                    <div class="status-item">
+                        <div class="label">Right Click</div>
+                        <div class="value" id="rightClickStatus" style="color: #e74c3c;">Not Tested</div>
+                    </div>
+                    <div class="status-item">
+                        <div class="label">Movement</div>
+                        <div class="value" id="moveStatus" style="color: #e74c3c;">Not Tested</div>
+                    </div>
+                    <div class="status-item">
+                        <div class="label">Drag</div>
+                        <div class="value" id="dragStatus" style="color: #e74c3c;">Not Tested</div>
+                    </div>
+                </div>
+
+                <canvas id="touchpad-canvas" class="touchpad-test" width="800" height="400"></canvas>
+
+                <div style="margin-top: 20px;">
+                    <button class="test-button" onclick="clearCanvas()">Clear Canvas</button>
+                    <button class="test-button" onclick="changeDrawColor('#000000')">Black</button>
+                    <button class="test-button" onclick="changeDrawColor('#e74c3c')">Red</button>
+                    <button class="test-button" onclick="changeDrawColor('#3498db')">Blue</button>
+                    <button class="test-button" onclick="changeDrawColor('#27ae60')">Green</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="display" class="tab-content">
+            <h2 style="margin-bottom: 20px;">Display Test</h2>
+
+            <div class="test-section">
+                <h3>Screen Properties</h3>
+                <div class="cards">
+                    <div class="card">
+                        <div class="card-row">
+                            <span class="label">Resolution</span>
+                            <span class="value">1366x768</span>
+                        </div>
+                        <div class="card-row">
+                            <span class="label">Screen Size</span>
+                            <span class="value" style="color: #27ae60; font-weight: bold;">15.3 inches</span>
+                        </div>
+                        <div class="card-row">
+                            <span class="label">Refresh Rate</span>
+                            <span class="value">60 Hz</span>
+                        </div>
+                        <div class="card-row">
+                            <span class="label">Touchscreen</span>
+                            <span class="value">No</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="test-section">
+                <h3>Dead Pixel Test</h3>
+                <p style="margin-bottom: 20px; color: #7f8c8d;">Click a color to test fullscreen. Look carefully for dead or stuck pixels. Press ESC or click to exit.</p>
+
+                <button class="test-button" onclick="testColorFullscreen('black')" style="background: #000;">Test Black</button>
+                <button class="test-button" onclick="testColorFullscreen('white')" style="background: #fff; color: #000;">Test White</button>
+                <button class="test-button" onclick="testColorFullscreen('red')" style="background: #f00;">Test Red</button>
+                <button class="test-button" onclick="testColorFullscreen('green')" style="background: #0f0;">Test Green</button>
+                <button class="test-button" onclick="testColorFullscreen('blue')" style="background: #00f;">Test Blue</button>
+                <button class="test-button" onclick="testColorFullscreen('yellow')" style="background: #ff0;">Test Yellow</button>
+            </div>
+        </div>
+
+        <div id="audio" class="tab-content">
+            <h2 style="margin-bottom: 20px;">Audio Test</h2>
+
+            <div class="test-section">
+                <h3>Speaker Test</h3>
+                <p style="margin-bottom: 20px; color: #7f8c8d;">Test your laptop speakers. You should hear a 440Hz tone from the selected speaker.</p>
+
+                <div class="cards">
+                    <div class="card">
+                        <h3>Stereo Test</h3>
+                        <button class="test-button" onclick="playLeftSpeaker()">Test Left Speaker</button>
+                        <button class="test-button" onclick="playRightSpeaker()">Test Right Speaker</button>
+                        <button class="test-button" onclick="playBothSpeakers()">Test Both Speakers</button>
+                    </div>
+
+                    <div class="card">
+                        <h3>Frequency Test</h3>
+                        <button class="test-button" onclick="playSweep()">Play Frequency Sweep</button>
+                        <p style="margin-top: 10px; font-size: 13px; color: #7f8c8d;">Plays a 200Hz-2000Hz sweep. You should hear the pitch increase smoothly.</p>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: 20px;">
+                    <h3>Detected Audio Devices</h3>                    <div class="card-row">
+                        <span class="label">High Definition Audio Device</span>
+                        <span class="value">OK</span>
+                    </div>                    <div class="card-row">
+                        <span class="label">High Definition Audio Device</span>
+                        <span class="value">OK</span>
+                    </div>                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let drawColor = '#000000';
+
+        // Tab Management - Fixed
+        function openTab(tabName, evt) {
+            try {
+                // Hide all tab contents
+                const tabContents = document.querySelectorAll('.tab-content');
+                tabContents.forEach(content => {
+                    content.classList.remove('active');
+                });
+
+                // Remove active class from all buttons
+                const tabButtons = document.querySelectorAll('.tab-button');
+                tabButtons.forEach(button => {
+                    button.classList.remove('active');
+                });
+
+                // Show the selected tab content
+                const selectedTab = document.getElementById(tabName);
+                if (selectedTab) {
+                    selectedTab.classList.add('active');
+                }
+
+                // Activate the clicked button
+                if (evt && evt.currentTarget) {
+                    evt.currentTarget.classList.add('active');
+                }
+
+                // Initialize interactive tests when tab opens
+                if (tabName === 'keyboard') {
+                    setTimeout(initKeyboard, 100);
+                } else if (tabName === 'touchpad') {
+                    setTimeout(initCanvas, 100);
+                }
+            } catch (error) {
+                console.error('Error opening tab:', error);
+            }
+        }
+
+        // Keyboard Test Functions
+        const keyboardRows = [
+            { label: 'Function Keys', keys: ['Escape', 'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10', 'F11', 'F12'] },
+            { label: 'Number Row', keys: ['Backquote', 'Digit1', 'Digit2', 'Digit3', 'Digit4', 'Digit5', 'Digit6', 'Digit7', 'Digit8', 'Digit9', 'Digit0', 'Minus', 'Equal', 'Backspace'] },
+            { label: 'Top Row', keys: ['Tab', 'KeyQ', 'KeyW', 'KeyE', 'KeyR', 'KeyT', 'KeyY', 'KeyU', 'KeyI', 'KeyO', 'KeyP', 'BracketLeft', 'BracketRight', 'Backslash'] },
+            { label: 'Home Row', keys: ['CapsLock', 'KeyA', 'KeyS', 'KeyD', 'KeyF', 'KeyG', 'KeyH', 'KeyJ', 'KeyK', 'KeyL', 'Semicolon', 'Quote', 'Enter'] },
+            { label: 'Bottom Row', keys: ['ShiftLeft', 'KeyZ', 'KeyX', 'KeyC', 'KeyV', 'KeyB', 'KeyN', 'KeyM', 'Comma', 'Period', 'Slash', 'ShiftRight'] },
+            { label: 'Space Row', keys: ['ControlLeft', 'MetaLeft', 'AltLeft', 'Space', 'AltRight', 'MetaRight', 'ControlRight'] },
+            { label: 'Arrows', keys: ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'] }
+        ];
+
+        let keydownListener = null;
+
+        function initKeyboard() {
+            const display = document.getElementById('keyboard-display');
+            if (!display) return;
+
+            // Clear existing content
+            display.innerHTML = '';
+
+            // Create keyboard layout by rows
+            keyboardRows.forEach(row => {
+                const rowDiv = document.createElement('div');
+                rowDiv.className = 'keyboard-row';
+                rowDiv.innerHTML = '<div class="row-label">' + row.label + '</div>';
+
+                const keysContainer = document.createElement('div');
+                keysContainer.className = 'keys-container';
+
+                row.keys.forEach(key => {
+                    const keyDiv = document.createElement('div');
+                    keyDiv.className = 'key';
+                    keyDiv.id = 'key-' + key;
+
+                    // Display friendly names
+                    let displayText = key.replace('Key', '').replace('Digit', '');
+                    if (key === 'Space') displayText = 'Space';
+                    if (key === 'Backspace') displayText = 'Back';
+                    if (key === 'Enter') displayText = 'Enter';
+                    if (key === 'ShiftLeft') displayText = 'Shift L';
+                    if (key === 'ShiftRight') displayText = 'Shift R';
+                    if (key === 'ControlLeft') displayText = 'Ctrl L';
+                    if (key === 'ControlRight') displayText = 'Ctrl R';
+                    if (key === 'AltLeft') displayText = 'Alt L';
+                    if (key === 'AltRight') displayText = 'Alt R';
+                    if (key === 'MetaLeft') displayText = 'Win L';
+                    if (key === 'MetaRight') displayText = 'Win R';
+                    if (key === 'Backquote') displayText = '';
+                    if (key === 'Minus') displayText = '-';
+                    if (key === 'Equal') displayText = '=';
+                    if (key === 'BracketLeft') displayText = '[';
+                    if (key === 'BracketRight') displayText = ']';
+                    if (key === 'Backslash') displayText = '\\';
+                    if (key === 'Semicolon') displayText = ';';
+                    if (key === 'Quote') displayText = "'";
+                    if (key === 'Comma') displayText = ',';
+                    if (key === 'Period') displayText = '.';
+                    if (key === 'Slash') displayText = '/';
+                    if (key === 'CapsLock') displayText = 'Caps';
+
+                    keyDiv.textContent = displayText;
+                    if (key === 'Space') keyDiv.style.minWidth = '200px';
+
+                    keysContainer.appendChild(keyDiv);
+                });
+
+                rowDiv.appendChild(keysContainer);
+                display.appendChild(rowDiv);
+            });
+
+            // Remove old listener if exists
+            if (keydownListener) {
+                document.removeEventListener('keydown', keydownListener);
+            }
+
+            // Add new listener with preventDefault
+            keydownListener = handleKeyPress;
+            document.addEventListener('keydown', keydownListener);
+        }
+
+        function handleKeyPress(e) {
+            // Prevent default browser behavior for all keys during test
+            if (document.getElementById('keyboard').classList.contains('active')) {
+                e.preventDefault();
+
+                const keyElement = document.getElementById('key-' + e.code);
+                if (keyElement) {
+                    keyElement.classList.add('pressed');
+                }
+            }
+        }
+
+        function resetKeyboard() {
+            document.querySelectorAll('.key').forEach(key => {
+                key.classList.remove('pressed');
+            });
+        }
+
+        // Touchpad Test Functions
+        function initCanvas() {
+            const canvas = document.getElementById('touchpad-canvas');
+            if (!canvas) return;
+
+            const ctx = canvas.getContext('2d');
+            ctx.strokeStyle = drawColor;
+            ctx.lineWidth = 3;
+            ctx.lineCap = 'round';
+
+            let isDrawing = false;
+            let lastX = 0, lastY = 0;
+
+            function draw(e) {
+                if (!isDrawing) return;
+
+                const rect = canvas.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+
+                ctx.beginPath();
+                ctx.moveTo(lastX, lastY);
+                ctx.lineTo(x, y);
+                ctx.stroke();
+
+                lastX = x;
+                lastY = y;
+
+                updateStatus('moveStatus', 'Working', true);
+                updateStatus('dragStatus', 'Working', true);
+            }
+
+            canvas.addEventListener('mousedown', (e) => {
+                isDrawing = true;
+                const rect = canvas.getBoundingClientRect();
+                lastX = e.clientX - rect.left;
+                lastY = e.clientY - rect.top;
+
+                if (e.button === 0) updateStatus('leftClickStatus', 'Working', true);
+                if (e.button === 2) updateStatus('rightClickStatus', 'Working', true);
+            });
+
+            canvas.addEventListener('mousemove', draw);
+            canvas.addEventListener('mouseup', () => isDrawing = false);
+            canvas.addEventListener('mouseleave', () => isDrawing = false);
+
+            canvas.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                isDrawing = true;
+                const rect = canvas.getBoundingClientRect();
+                const touch = e.touches[0];
+                lastX = touch.clientX - rect.left;
+                lastY = touch.clientY - rect.top;
+                updateStatus('leftClickStatus', 'Working', true);
+            });
+
+            canvas.addEventListener('touchmove', (e) => {
+                e.preventDefault();
+                if (!isDrawing) return;
+
+                const rect = canvas.getBoundingClientRect();
+                const touch = e.touches[0];
+                const x = touch.clientX - rect.left;
+                const y = touch.clientY - rect.top;
+
+                ctx.beginPath();
+                ctx.moveTo(lastX, lastY);
+                ctx.lineTo(x, y);
+                ctx.stroke();
+
+                lastX = x;
+                lastY = y;
+
+                updateStatus('moveStatus', 'Working', true);
+                updateStatus('dragStatus', 'Working', true);
+            });
+
+            canvas.addEventListener('touchend', () => isDrawing = false);
+
+            canvas.addEventListener('contextmenu', (e) => {
+                e.preventDefault();
+                updateStatus('rightClickStatus', 'Working', true);
+            });
+        }
+
+        function updateStatus(id, status, working) {
+            const element = document.getElementById(id);
+            if (element) {
+                element.textContent = status;
+                element.style.color = working ? '#27ae60' : '#e74c3c';
+            }
+        }
+
+        function clearCanvas() {
+            const canvas = document.getElementById('touchpad-canvas');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        function changeDrawColor(color) {
+            drawColor = color;
+            const canvas = document.getElementById('touchpad-canvas');
+            const ctx = canvas.getContext('2d');
+            ctx.strokeStyle = color;
+        }
+
+        // Display Test Functions
+        function testColorFullscreen(color) {
+            const overlay = document.createElement('div');
+            overlay.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: '+color+'; z-index: 99999; cursor: none;';
+            overlay.id = 'fullscreen-color-test';
+
+            const instruction = document.createElement('div');
+            instruction.style.cssText = 'position: absolute; top: '+(Math.random() * 80 + 10)+'%; left: '+(Math.random() * 80 + 10)+'%; color: '+(color === 'white' || color === 'yellow' ? 'black' : 'white')+'; font-size: 24px; font-weight: bold; text-shadow: 0 0 10px '+(color === 'white' ? 'black' : 'white')+';';
+            instruction.textContent = 'Testing ' + color.toUpperCase() + ' - Look for dead pixels. Press ESC or click to exit.';
+
+            overlay.appendChild(instruction);
+            document.body.appendChild(overlay);
+
+            // Request fullscreen mode (hides browser UI)
+            const elem = overlay;
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen().catch(err => {
+                    console.log('Fullscreen request failed:', err);
+                });
+            } else if (elem.webkitRequestFullscreen) {
+                elem.webkitRequestFullscreen();
+            } else if (elem.msRequestFullscreen) {
+                elem.msRequestFullscreen();
+            } else if (elem.mozRequestFullScreen) {
+                elem.mozRequestFullScreen();
+            }
+
+            function exitTest() {
+                // Exit fullscreen mode
+                if (document.exitFullscreen) {
+                    document.exitFullscreen().catch(() => {});
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                } else if (document.msExitFullscreen) {
+                    document.msExitFullscreen();
+                } else if (document.mozCancelFullScreen) {
+                    document.mozCancelFullScreen();
+                }
+
+                // Remove overlay
+                setTimeout(() => {
+                    if (overlay.parentNode) {
+                        document.body.removeChild(overlay);
+                    }
+                    document.removeEventListener('keydown', handleEscape);
+                    overlay.removeEventListener('click', exitTest);
+                    document.removeEventListener('fullscreenchange', handleFullscreenChange);
+                    document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
+                    document.removeEventListener('msfullscreenchange', handleFullscreenChange);
+                    document.removeEventListener('mozfullscreenchange', handleFullscreenChange);
+                }, 100);
+            }
+
+            function handleEscape(e) {
+                if (e.key === 'Escape') exitTest();
+            }
+
+            function handleFullscreenChange() {
+                // Exit test when user exits fullscreen mode
+                if (!document.fullscreenElement && !document.webkitFullscreenElement &&
+                    !document.msFullscreenElement && !document.mozFullScreenElement) {
+                    exitTest();
+                }
+            }
+
+            document.addEventListener('keydown', handleEscape);
+            overlay.addEventListener('click', exitTest);
+            document.addEventListener('fullscreenchange', handleFullscreenChange);
+            document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+            document.addEventListener('msfullscreenchange', handleFullscreenChange);
+            document.addEventListener('mozfullscreenchange', handleFullscreenChange);
+        }
+
+        // Audio Test Functions
+        let audioContext = null;
+
+        function getAudioContext() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            return audioContext;
+        }
+
+        function playLeftSpeaker() {
+            const ctx = getAudioContext();
+            const oscillator = ctx.createOscillator();
+            const gainNode = ctx.createGain();
+            const panner = ctx.createStereoPanner();
+
+            oscillator.connect(gainNode);
+            gainNode.connect(panner);
+            panner.connect(ctx.destination);
+
+            panner.pan.value = -1; // Left speaker
+            oscillator.frequency.value = 440;
+            oscillator.type = 'sine';
+
+            oscillator.start();
+            setTimeout(() => oscillator.stop(), 1000);
+        }
+
+        function playRightSpeaker() {
+            const ctx = getAudioContext();
+            const oscillator = ctx.createOscillator();
+            const gainNode = ctx.createGain();
+            const panner = ctx.createStereoPanner();
+
+            oscillator.connect(gainNode);
+            gainNode.connect(panner);
+            panner.connect(ctx.destination);
+
+            panner.pan.value = 1; // Right speaker
+            oscillator.frequency.value = 440;
+            oscillator.type = 'sine';
+
+            oscillator.start();
+            setTimeout(() => oscillator.stop(), 1000);
+        }
+
+        function playBothSpeakers() {
+            const ctx = getAudioContext();
+            const oscillator = ctx.createOscillator();
+            const gainNode = ctx.createGain();
+
+            oscillator.connect(gainNode);
+            gainNode.connect(ctx.destination);
+
+            oscillator.frequency.value = 440;
+            oscillator.type = 'sine';
+
+            oscillator.start();
+            setTimeout(() => oscillator.stop(), 1000);
+        }
+
+        function playSweep() {
+            const ctx = getAudioContext();
+            const oscillator = ctx.createOscillator();
+            const gainNode = ctx.createGain();
+
+            oscillator.connect(gainNode);
+            gainNode.connect(ctx.destination);
+
+            oscillator.frequency.setValueAtTime(200, ctx.currentTime);
+            oscillator.frequency.exponentialRampToValueAtTime(2000, ctx.currentTime + 2);
+            oscillator.type = 'sine';
+
+            oscillator.start();
+            setTimeout(() => oscillator.stop(), 2000);
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('Laptop Diagnostic Report v15.0 loaded');
+        });
+    </script>
+</body>
+</html>
